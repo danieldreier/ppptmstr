@@ -78,8 +78,8 @@ Asynchronous removal; queues master for deletion. May take several minutes to ac
           "status": "terminating"
         }
 
-## Provisioning Keys [/master/{uuid}/keys]
-Manage node provisioning keys used to connect client nodes to masters
+## List Provisioning Keys [/master/{uuid}/keys]
+Access all node provisioning keys used to connect client nodes to masters. Secret keys are not visible after creation.
 
 + Parameters
     + uuid (required, string, `c9bb1af2-081a-4a3a-8f90-d1ad0e7e7c33`) ... String `uuid` of the master. Has example value.
@@ -102,7 +102,7 @@ Manage node provisioning keys used to connect client nodes to masters
     + name (required, string, `dc-west01-prod`) ... name of the provisioning key. Has example value.
     + uuid (required, string, `c9bb1af2-081a-4a3a-8f90-d1ad0e7e7c33`) ... String `uuid` of the master. Has example value.
 
-### List node provisioning keys [GET]
+### Describe a node provisioning key [GET]
 + Response 200 (application/json)
 
         {
