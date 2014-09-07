@@ -8,8 +8,11 @@ Puppetmaster API is a hosted puppet master service. Currently 100% POC, nothing 
 # Group Master Management
 Create, destroy, and manage puppet masters
 
-## Puppet Masters [/master]
+## List or create masters [/{tenant_id}/master]
 List or create puppet masters
+
++ Parameters
+    + tenant_id (required, number, `123456`) ... Numeric `tenant_id` identifying the user. Has example value.
 
 ### List all masters [GET]
 + Response 200 (application/json)
@@ -47,10 +50,11 @@ Asynchronous creation; queues master for creation. May take several minutes to a
           "status": "provisioning"
         }
 
-## Management [/master/{uuid}]
+## Manage individual masters [/{tenant_id}/master/{uuid}]
 Get and set information about a given master
 
 + Parameters
+    + tenant_id (required, number, `123456`) ... Numeric `tenant_id` identifying the user. Has example value.
     + uuid (required, string, `c9bb1af2-081a-4a3a-8f90-d1ad0e7e7c33`) ... String `uuid` of the master. Has example value.
 
 ### Get information about a master [GET]
@@ -78,11 +82,12 @@ Asynchronous removal; queues master for deletion. May take several minutes to ac
           "status": "terminating"
         }
 
-## List Provisioning Keys [/master/{uuid}/keys]
+## List Provisioning Keys [/{tenant_id}/master/{uuid}/keys]
 Access all node provisioning keys used to connect client nodes to masters. Secret keys are not visible after creation.
 
 + Parameters
     + uuid (required, string, `c9bb1af2-081a-4a3a-8f90-d1ad0e7e7c33`) ... String `uuid` of the master. Has example value.
+    + tenant_id (required, number, `123456`) ... Numeric `tenant_id` identifying the user. Has example value.
 
 ### List node provisioning keys [GET]
 + Response 200 (application/json)
@@ -97,8 +102,9 @@ Access all node provisioning keys used to connect client nodes to masters. Secre
         }]
 
 
-### Provisioning Keys [/master/{uuid}/keys/{name}]
+### Provisioning Keys [/{tenant_id}/master/{uuid}/keys/{name}]
 + Parameters
+    + tenant_id (required, number, `123456`) ... Numeric `tenant_id` identifying the user. Has example value.
     + name (required, string, `dc-west01-prod`) ... name of the provisioning key. Has example value.
     + uuid (required, string, `c9bb1af2-081a-4a3a-8f90-d1ad0e7e7c33`) ... String `uuid` of the master. Has example value.
 
