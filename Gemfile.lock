@@ -1,15 +1,22 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    amq-protocol (1.9.2)
-    bunny (1.4.0)
-      amq-protocol (>= 1.9.2)
+    bcrypt (3.1.7)
+    beefcake (0.3.7)
+    builder (3.2.2)
     daemons (1.1.9)
     eventmachine (1.0.3)
+    i18n (0.6.11)
     json (1.8.1)
+    multi_json (1.10.1)
     rack (1.5.2)
     rack-protection (1.5.3)
       rack
+    riak-client (1.0.5)
+      beefcake (~> 0.3.7)
+      builder (>= 2.1.2)
+      i18n (>= 0.4.0)
+      multi_json (~> 1.0)
     sinatra (1.4.5)
       rack (~> 1.4)
       rack-protection (~> 1.4)
@@ -24,7 +31,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bunny
+  bcrypt
   json
+  riak-client (~> 1.0.3)
   sinatra
   thin
