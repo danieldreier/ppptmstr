@@ -23,16 +23,35 @@ class Tenant
   end
 
   def authenticate!(api_key)
-    @authentication_state=true if @api_keys[api_key] == true
+    @authentication_state=true if self.validate_api_key(api_key)
   end
 
   def api_keys
     @api_keys
   end
 
+  def hash_api_key(api_key)
+    BCrypt::Password.create(api_key)
+  end
+
+  def validate_api_key(api_key)
+    validation_successful=false
+    @api_keys.each do |key_hash, enabled|
+      if enabled == true
+        begin
+          hash=BCrypt::Password.new(key_hash)
+        rescue BCrypt::Errors::InvalidHash
+        end
+        validation_successful=true if hash == api_key
+      end
+    end
+    validation_successful
+  end
+
   def authorize_api_key(api_key)
-    @api_keys[api_key] = true
-    self.save_api_keys
+    hashed_api_key = hash_api_key(api_key)
+    @api_keys[hashed_api_key] = true
+    save_api_keys
   end
 
   private
@@ -46,7 +65,6 @@ class Tenant
 
   def save_api_keys
     client = Riak::Client.new
-    puts client.ping
     client.bucket('tenants')
     kv_tenant = client['tenants'].get_or_new(self.id)
     kv_tenant.data = @api_keys.to_json

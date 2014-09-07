@@ -1,7 +1,10 @@
 require 'sinatra'
 require 'sinatra/base'
 require 'json'
+require 'require_all'
 
+
+require_all 'models'
 
 module Authtools
   def protected!
@@ -12,7 +15,19 @@ module Authtools
 
   def authorized?
     @auth ||=  Rack::Auth::Basic::Request.new(request.env)
-    @auth.provided? and @auth.basic? and @auth.credentials and @auth.credentials == ['123', 'admin'] and params[:tenant_id] == @auth.credentials[0]
+    tenant_id = sanitize(@auth.credentials[0])
+    api_key   = sanitize(@auth.credentials[1])
+
+    @current_tenant = Tenant.new(tenant_id)
+    @current_tenant.authenticate!(api_key)
+    @auth.provided? and @auth.basic? and @auth.credentials and @current_tenant.authenticated? and params[:tenant_id] == tenant_id
+  end
+
+  def sanitize_tenant(tenant_id)
+    tenant_id.to_s.delete('^0-9')
+  end
+  def sanitize(string)
+    string.to_s.delete('^A-Za-z0-9')
   end
 end
 
@@ -20,11 +35,6 @@ end
 class Ppptmstr < Sinatra::Base
   include Authtools
 
-#  before do
-#  end
-#  use Rack::Auth::Basic, "Restricted Area" do |username, password|
-#    username == 'admin' and password == 'admin'
-#  end
   not_found do
     [404, '' ]
   end
