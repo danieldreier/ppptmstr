@@ -8,10 +8,6 @@ class Ppptmstr < Sinatra::Base
     [404, '' ]
   end
 
-  post '/' do
-    "Hello!\nYou posted #{@request_body}!\n"
-  end
-
   get '/master' do
     [{
       "uuid"   => "34378253-2009-4085-a687-8252a8d0014d",

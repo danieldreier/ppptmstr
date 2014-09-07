@@ -1,6 +1,9 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    amq-protocol (1.9.2)
+    bunny (1.4.0)
+      amq-protocol (>= 1.9.2)
     daemons (1.1.9)
     eventmachine (1.0.3)
     json (1.8.1)
@@ -21,6 +24,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bunny
   json
   sinatra
   thin
