@@ -3,7 +3,6 @@ require 'sinatra/base'
 require 'json'
 require 'require_all'
 
-
 require_all 'models'
 
 module Authtools
@@ -40,24 +39,9 @@ class Ppptmstr < Sinatra::Base
   end
 
   get '/:tenant_id/master' do |tenant_id|
+  # get a list of masters belonging to the user
     protected!
-    # get a list of masters belonging to the user
-    # probably from some kind of DB
-    error 401 unless params[:tenant_id].to_s == "123"
-    [{
-      "tenant_id" => tenant_id,
-      "uuid"   => "34378253-2009-4085-a687-8252a8d0014d",
-      "fqdn"   => "mymaster.example.com",
-      "status" => "running"
-    }, {
-      "uuid"   => "ee03ffd8-2c65-4fa3-9309-fdbe64afa84f",
-      "fqdn"   => "testbox.dev.example.com",
-      "status" => "provisioning"
-    }, {
-      "uuid"   => "413f77df-9568-49b3-9e29-f65016b0b524",
-      "fqdn"   => "connor.example.com",
-      "status" => "terminated"
-    }].to_json
+    Puppetmaster.list_masters(tenant_id: tenant_id).to_json
   end
 
   post '/:tenant_id/master' do |tenant_id|
@@ -74,16 +58,9 @@ class Ppptmstr < Sinatra::Base
   end
 
   get '/:tenant_id/master/:uuid' do |tenant_id, uuid|
-    protected!
     # get info about a uuid
-    # from some kind of DB
-    {
-      "uuid"    => uuid,
-      "created" => "Sat, 06 Sep 2014 10:00:22 -0700",
-      "fqdn"    => "puppetmaster.example.com",
-      "gitrepo" => "https://github.com/githubtraining/hellogitworld.git",
-      "status"  => "running"
-    }.to_json
+    protected!
+    Puppetmaster.new(tenant_id: tenant_id, uuid: uuid).to_hash.to_json
   end
 
   delete '/:tenant_id/master/:uuid' do |tenant_id, uuid|
