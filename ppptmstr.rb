@@ -46,15 +46,12 @@ class Ppptmstr < Sinatra::Base
 
   post '/:tenant_id/master' do |tenant_id|
     protected!
-    # generate a UUID, do basic validation of inputs, and submit a provision
-    # request to a queue
-    {
-      "uuid"    => "193627c9-eb95-417b-bc59-5ae69b0dd146",
-      "fqdn"    => "production.example.com",
-      "gitrepo" => "https://github.com/githubtraining/hellogitworld.git",
-      "status"  => "provisioning"
-    }.to_json
-
+    json_params = JSON.parse(request.env["rack.input"].read)
+    new_master = Puppetmaster.new(tenant_id: tenant_id)
+    new_master.fqdn = json_params['fqdn'].to_s
+    new_master.gitrepo = json_params['gitrepo'].to_s
+    new_master.deploy
+    new_master.to_hash.to_json
   end
 
   get '/:tenant_id/master/:uuid' do |tenant_id, uuid|
@@ -65,15 +62,10 @@ class Ppptmstr < Sinatra::Base
 
   delete '/:tenant_id/master/:uuid' do |tenant_id, uuid|
     protected!
-    # do basic validation, update server status to terminating in a database
-    # (locking, basically), then submit a delete request to a queue
-    {
-      "uuid"      => uuid,
-      "created"   => "Sat, 06 Sep 2014 10:00:22 -0700",
-      "destroyed" => "Sat, 06 Sep 2014 10:00:22 -0700",
-      "fqdn"      => "puppetmaster.example.com",
-      "status"    => "terminating"
-    }.to_json
+
+    doomed_master = Puppetmaster.new(tenant_id: tenant_id, uuid: uuid)
+    doomed_master.destroy
+    doomed_master.to_hash.to_json
   end
 
   get '/:tenant_id/master/:uuid/keys' do |tenant_id, uuid|

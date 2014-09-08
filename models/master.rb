@@ -23,9 +23,6 @@ class Puppetmaster
       @uuid = uuid.to_s.delete('^A-Za-z0-9-')
       load_puppetmaster(@uuid)
       raise "owners do not match" unless @master_definition['tenant_id'] == self.owner
-      @fqdn    = @master_definition['fqdn']
-      @gitrepo = @master_definition['gitrepo']
-      @status  = @master_definition['status']
     end
 
   end
@@ -65,12 +62,32 @@ class Puppetmaster
     @authentication_state
   end
 
+  def deploy
+    # check if this has been deployed before or is new
+    # load_puppetmaster(self.uuid)
+    # do some kind of validation
+    # submit to queue for creation
+    self.status = 'pending_provisioning'
+    save_puppetmaster
+  end
+
+  def destroy
+    load_puppetmaster(self.uuid)
+    # do some kind of validation
+    # submit to queue for destruction
+    self.status = 'terminating'
+    save_puppetmaster
+  end
+
   def load_puppetmaster(uuid)
     masters = Riak::Client.new
     master_bucket="#{self.owner}-masters"
     masters.bucket(master_bucket)
     master_json = masters[master_bucket].get(self.uuid).data
     @master_definition = JSON.parse(master_json)
+    @fqdn    = @master_definition['fqdn']
+    @gitrepo = @master_definition['gitrepo']
+    @status  = @master_definition['status']
   end
 
   def save_puppetmaster
@@ -93,6 +110,7 @@ class Puppetmaster
   def link_to_tenant
     # link master to tenant so we can use link-walking to list a tenant's
     # masters efficiently
+    # TODO: this doesn't seem to work
 
     client = Riak::Client.new
     tenants_bucket = client['tenants']
