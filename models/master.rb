@@ -1,4 +1,7 @@
 #require 'bcrypt'
+# TODO: add creation, update, destruction dates
+# TODO: add versioning?
+
 require 'rubygems'
 require 'bundler/setup'
 require 'SecureRandom'

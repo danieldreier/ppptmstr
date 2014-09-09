@@ -70,40 +70,26 @@ class Ppptmstr < Sinatra::Base
 
   get '/:tenant_id/master/:uuid/keys' do |tenant_id, uuid|
     protected!
-    [{
-      "name"    => "dc1-prod",
-      "created" => "Sat, 06 Sep 2014 10:00:22 -0700"
-    },
-    {
-      "name"    => "dc2-prod",
-      "created" => "Sat, 06 Sep 2014 10:00:22 -0700"
-    }].to_json
+    Deploykey.list_keys(tenant_id: tenant_id, master_uuid: uuid).to_json
   end
 
-  get '/:tenant_id/master/:uuid/keys/:name' do |tenant_id, uuid, name|
+  get '/:tenant_id/master/:master_uuid/keys/:key_uuid' do |tenant_id, master_uuid, key_uuid|
     protected!
-    {
-      "name"    => name,
-      "created" => "Sat, 06 Sep 2014 10:00:22 -0700"
-    }
+    Deploykey.new(tenant_id: tenant_id, uuid: key_uuid, master_uuid: master_uuid).to_hash.to_json
   end
 
   post '/:tenant_id/master/:uuid/keys/:name' do |tenant_id, uuid, name|
     protected!
-    {
-      "name"       => name,
-      "created"    => "Sat, 06 Sep 2014 10:00:22 -0700",
-      "secret_key" => "1k1Z1pT2t3heX939xa7uDE4EeISBL69Z"
-    }.to_json
+    new_key = Deploykey.new(tenant_id: tenant_id, master_uuid: uuid, name: name)
+    new_key.save_to_db
+    new_key.to_hash.to_json
   end
 
-  delete '/:tenant_id/master/:uuid/keys' do |tenant_id, uuid, name|
+  delete '/:tenant_id/master/:master_uuid/keys/:key_uuid' do |tenant_id, master_uuid, key_uuid|
     protected!
-    {
-      "name"      => "dc3-staging",
-      "created"   => "Sat, 06 Sep 2014 10:00:22 -0700",
-      "destroyed" => "Sat, 06 Sep 2014 15:07:18 -0700"
-    }.to_json
+    doomed_key = Deploykey.new(tenant_id: tenant_id, uuid: key_uuid, master_uuid: master_uuid)
+    doomed_key.destroy
+    doomed_key.to_hash.to_json
   end
 
 end
