@@ -1,74 +1,54 @@
-require 'bcrypt'
 require 'rubygems'
 require 'bundler/setup'
 
 require 'riak'
+require 'hashie'
+require 'time'
+require 'securerandom'
 
-class Tenant
-  include BCrypt
+class Tenant < Hashie::Dash
+  property :tenant_id
+  property :full_name
+  property :email
+  property :creation_date, default: Time.new.to_i
 
-  def initialize(id)
-    @TENANT_ID=id.to_s
-    @api_keys={}
-    @authentication_state=false
-    load_api_keys
+  def initialize(hash = {})
+    super
+    self.tenant_id = SecureRandom.uuid unless self.tenant_id
+  end
+end
+
+class TenantRepository
+  include Hashie::Extensions::SymbolizeKeys
+  BUCKET = 'Tenants'
+
+  def initialize(client)
+    @client = client
   end
 
-  def id
-    @TENANT_ID
+  def save(tenant)
+    tenants = @client.bucket(BUCKET)
+    key = tenant.tenant_id
+
+    riak_obj = tenants.get_or_new(key)
+    riak_obj.data = tenant.to_hash
+    riak_obj.content_type = 'application/json'
+    riak_obj.store
   end
 
-  def authenticated?
-    @authentication_state
+  def delete(tenant_id:)
+    # TODO: deleting a tenant should also delete all their API keys and masters
+    riak_obj = @client.bucket(BUCKET)[tenant_id]
+    riak_obj.delete
   end
 
-  def authenticate!(api_key)
-    @authentication_state=true if self.validate_api_key(api_key)
+  def get(tenant_id)
+    riak_obj = @client.bucket(BUCKET)[tenant_id]
+
+    # symbolized keys is needed because turning the hashie dash into JSON
+    # changes :tenant_id (and all other params) into "tenant_id" and then
+    # the object can't be created anymore. If you start out using quoted
+    # names, hashie doesn't treat them as methods.
+    Tenant.new(riak_obj.data.symbolize_keys)
   end
-
-  def api_keys
-    @api_keys
-  end
-
-  def hash_api_key(api_key)
-    BCrypt::Password.create(api_key)
-  end
-
-  def validate_api_key(api_key)
-    validation_successful=false
-    @api_keys.each do |key_hash, enabled|
-      if enabled == true
-        begin
-          hash=BCrypt::Password.new(key_hash)
-        rescue BCrypt::Errors::InvalidHash
-        end
-        validation_successful=true if hash == api_key
-      end
-    end
-    validation_successful
-  end
-
-  def authorize_api_key(api_key)
-    hashed_api_key = hash_api_key(api_key)
-    @api_keys[hashed_api_key] = true
-    save_api_keys
-  end
-
-  private
-
-  def load_api_keys
-    client = Riak::Client.new
-    client.bucket('tenants')
-    saved_keys_json = client['tenants'].get(self.id).data
-    @api_keys = JSON.parse(saved_keys_json)
-  end
-
-  def save_api_keys
-    client = Riak::Client.new
-    client.bucket('tenants')
-    kv_tenant = client['tenants'].get_or_new(self.id)
-    kv_tenant.data = @api_keys.to_json
-    kv_tenant.store
-  end
-
 end
