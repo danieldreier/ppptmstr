@@ -2,12 +2,8 @@
 language: ruby
 services:
   - riak
-bundler_args: --without development
-before_install: rm Gemfile.lock || true
 rvm:
-  - 2.1.0
   - 2.1.2
-  - ruby-head
 cache:
   bundler: true
 script: bundle exec rspec --format documentation
