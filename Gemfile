@@ -7,7 +7,6 @@ gem 'bcrypt'
 gem 'riak-client', '~> 1.0.3'
 gem 'require_all'
 gem 'hashie'
-gem 'warden'
 gem 'sinatra-contrib'
 gem 'fortune_gem'
 
