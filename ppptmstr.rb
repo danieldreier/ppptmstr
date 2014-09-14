@@ -2,7 +2,6 @@ require 'sinatra'
 require 'sinatra/base'
 require 'sinatra/json'
 require 'json'
-require 'warden'
 require 'fortune_gem'
 
 require 'require_all'
