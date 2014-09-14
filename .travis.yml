@@ -8,4 +8,5 @@ cache:
 script: bundle exec rspec --format documentation
 env:
   global:
-    secure: V01P9M9glqaSt2hIoRy23SIoU92hoEWSe+PiBkZ+5aeAVIGUQG8JyB/KNLk9A529ub8jOxmj+24SB29o/Ltx1+tSranfDXQ3MC1Z6e30gryHGr2r00UIbKfcBAHLaki20xKJvIhsN1waaUIXVaPGymClulnpOTl6B8EAYswXOrY=
+  - secure: V01P9M9glqaSt2hIoRy23SIoU92hoEWSe+PiBkZ+5aeAVIGUQG8JyB/KNLk9A529ub8jOxmj+24SB29o/Ltx1+tSranfDXQ3MC1Z6e30gryHGr2r00UIbKfcBAHLaki20xKJvIhsN1waaUIXVaPGymClulnpOTl6B8EAYswXOrY=
+  - secure: XzDrw4S9KB9WXfedMlUbUOM9KP62Ov7rbQDJOojhbYwGn05/WVBfdwfRYV0sRiXj9MV6/eoUNHj//51wmcswBHvO0c+NbDWLJ114UkCVGqkRNpsgySUrK61DrKBe3X4RaRvGShyaQe7BYg/ud7uUL545XSWaP5EyD7l4oDKrhpE=
