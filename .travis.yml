@@ -1,0 +1,9 @@
+---
+language: ruby
+services:
+  - riak
+bundler_args: --without development
+before_install: rm Gemfile.lock || true
+rvm:
+  - 2.1.2p95
+script: rspec
