@@ -2,7 +2,7 @@
 # TODO: add creation, update, destruction dates
 # TODO: add versioning?
 
-require 'SecureRandom'
+require 'securerandom'
 require 'riak'
 
 class DeployKey < Hashie::Dash
