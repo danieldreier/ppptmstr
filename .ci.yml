@@ -1,13 +1,15 @@
 image: dockerfile/ubuntu #name of image to run the build against
 #run_params: "-e PASSWORD=moew"  
-before:
-  - apt-get update
-  - apt-get install git -y
 command:
+  - curl http://apt.basho.com/gpg/basho.apt.key | sudo apt-key add -
+  - bash -c "echo deb http://apt.basho.com $(lsb_release -sc) main > /etc/apt/sources.list.d/basho.list"
   - apt-get update
-  - apt-get install htop -y
-#links: #links to parent image using docker links
-#  - image: redis
+  - apt-get install riak
+  - riak start
+services:
+  - google/mysql
+links: #links to parent image using docker links
+  - image: redis
 #    name: content-uat4 #optional; defaults to image name
 #    run_params: "-v `pwd`:/content" #optional run params
 #    links: # Links to parent container; links can be nested indefinitely
