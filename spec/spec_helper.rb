@@ -1,3 +1,6 @@
+require 'coveralls'
+Coveralls.wear!
+
 ENV['RACK_ENV'] = 'test'
 
 #support_path = File.expand_path('../../features/support', __FILE__)

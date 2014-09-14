@@ -14,3 +14,5 @@ gem 'rake'
 gem 'rspec',            '~> 3.0.0'
 gem 'rack-test',        '~> 0.6.2', require: 'rack/test'
 gem 'json_spec'
+
+gem 'coveralls', require: false

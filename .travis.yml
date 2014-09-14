@@ -1,9 +1,11 @@
----
 language: ruby
 services:
-  - riak
+- riak
 rvm:
-  - 2.1.2
+- 2.1.2
 cache:
   bundler: true
 script: bundle exec rspec --format documentation
+env:
+  global:
+    secure: V01P9M9glqaSt2hIoRy23SIoU92hoEWSe+PiBkZ+5aeAVIGUQG8JyB/KNLk9A529ub8jOxmj+24SB29o/Ltx1+tSranfDXQ3MC1Z6e30gryHGr2r00UIbKfcBAHLaki20xKJvIhsN1waaUIXVaPGymClulnpOTl6B8EAYswXOrY=
