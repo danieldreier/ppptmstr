@@ -1,5 +1,8 @@
 image: ubuntu #name of image to run the build against
 #run_params: "-e PASSWORD=moew"  
+before:
+  - apt-get update
+  - apt-get install git -y
 command:
   - apt-get update
   - apt-get install htop -y
