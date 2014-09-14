@@ -10,4 +10,4 @@ rvm:
   - ruby-head
 cache:
   bundler: true
-script: rspec --format documentation
+script: bundle exec rspec --format documentation
