@@ -4,7 +4,7 @@
 
 require 'rubygems'
 require 'bundler/setup'
-require 'SecureRandom'
+require 'securerandom'
 require 'hashie'
 require 'riak'
 
