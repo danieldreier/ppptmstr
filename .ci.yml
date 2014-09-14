@@ -1,7 +1,7 @@
-image: dockerfile/ubuntu
+image: debian:wheezy
 command:
   - curl http://apt.basho.com/gpg/basho.apt.key | sudo apt-key add -
-  - echo deb http://apt.basho.com trusty main > /etc/apt/sources.list.d/basho.list
+  - echo deb http://apt.basho.com wheezy main > /etc/apt/sources.list.d/basho.list
   - apt-get update
   - apt-get install riak
   - riak start
