@@ -5,9 +5,13 @@ require 'securerandom'
 
 class ApiKey < Hashie::Dash
   property :tenant_id, required: true
-  property :key, default: SecureRandom.hex(16)
+  property :key
   property :creation_date, default: Time.new.to_i
   property :description
+  def initialize(hash = {})
+    super
+    self.key = SecureRandom.hex(16) unless self.key
+  end
 end
 
 class ApiKeyRepository
