@@ -7,3 +7,12 @@ command:
   - apt-get update
   - apt-get install riak -y
   - riak start
+  - riak ping
+  - apt-get install -y procps
+  - curl -sSL https://get.rvm.io | bash -s stable --ruby
+  - source /etc/profile.d/rvm.sh
+  - rvm install 2.1.2
+  - rvm use 2.1.2
+  - rvm gemset use testing --create
+  - bundle install
+  - bundle exec rspec --format documentation
