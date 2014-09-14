@@ -5,5 +5,5 @@ command:
   - curl http://apt.basho.com/gpg/basho.apt.key | apt-key add -
   - echo deb http://apt.basho.com wheezy main > /etc/apt/sources.list.d/basho.list
   - apt-get update
-  - apt-get install riak
+  - apt-get install riak -y
   - riak start
