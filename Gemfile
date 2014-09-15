@@ -16,4 +16,3 @@ gem 'rack-test',        '~> 0.6.2', require: 'rack/test'
 gem 'json_spec'
 
 gem 'coveralls', require: false
-gem "codeclimate-test-reporter", group: :test, require: nil
